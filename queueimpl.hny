@@ -1,0 +1,50 @@
+from synch import Lock, Condition, acquire, release, wait, notify, notifyAll
+from alloc import malloc, free
+
+def Queue():
+    result = { .head: None, .tail: None, .size: 0, .mutex: Lock(), 
+        .getcond: Condition(), .swapcond: Condition() }
+
+def put(q, v):
+    acquire(?q->mutex)
+    let node = malloc({ .value: v, .next: None }):
+        if q->tail == None:
+            q->tail = q->head = node
+        else:
+            q->tail->next = node
+            q->tail = node
+        q->size += 1
+        notify(?q->getcond)
+        notify(?q->swapcond)
+    release(?q->mutex)
+
+def get(q):
+    acquire(?q->mutex)
+    while (q->size == 0):
+        wait(?q->getcond, ?q->mutex)
+    let node = q->head:
+        result = node->value
+        q->head = node->next
+        if q->head == None:
+            q->tail = None
+        free(node)
+        q->size -= 1
+    release(?q->mutex)
+
+def swap(q):
+    acquire(?q->mutex)
+    while (q->size < 2):
+        wait(?q->swapcond, ?q->mutex)
+    # swap the first two elements in the queue
+    var first = q->head
+    var sec = first->next
+
+    first->next = sec->next
+    sec->next = first
+
+    q->head = sec
+
+    if (q->size == 2):
+        q->tail = first
+
+    release(?q->mutex)

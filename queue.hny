@@ -1,0 +1,21 @@
+import list
+
+def Queue():
+    result = { .queue: [], .size: 0 }
+
+def put(q, v):
+    atomically:
+        q->queue = list.append(q->queue, v)
+        q->size += 1
+
+def get(q):
+    atomically when (q->size > 0): 
+        result = list.head(q->queue)
+        q->queue = list.tail(q->queue)
+        q->size -= 1
+
+def swap(q):
+    atomically when (q->size > 1):
+        let tmp = q->queue[0]:
+            q->queue[0] = q->queue[1]
+            q->queue[1] = tmp

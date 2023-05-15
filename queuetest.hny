@@ -1,0 +1,26 @@
+import queue
+
+const NPUT = 3
+const NGET = 1
+const SWAP = 1
+
+q = queue.Queue()
+
+def put_test(self ): 
+    print("call put", self ) 
+    queue.put(?q, self ) 
+    print("done put", self )
+
+def get_test(self ):
+    print("call get", self )
+    let v = queue.get(?q):
+        print("done get", self, v)
+
+def swap_test(self ): 
+    print("call swap", self )
+    queue.swap(?q)
+    print("done swap", self )
+    
+for i in {1..NPUT}: spawn put_test(i)
+for i in {1..NGET}: spawn get_test(i)
+for i in {1..SWAP}: spawn swap_test(i)
