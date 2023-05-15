@@ -1,0 +1,28 @@
+import list
+
+def Queue():
+    result = []
+
+def get(q):
+    atomically:
+        if !q == []:
+            result = None
+        else:
+            result = list.head(!q)
+            !q = list.tail(!q)
+
+def put(q, v):
+    atomically !q = list.append(!q, v)
+
+def insert(q, v):
+    atomically:
+        var tmp = [v,]
+        for i in !q:
+            tmp = list.append(tmp, i)
+        !q = tmp
+
+def contains(q, v):
+    atomically result = (v in !q)
+
+def reverse(q):
+	atomically !q = list.reversed(!q)

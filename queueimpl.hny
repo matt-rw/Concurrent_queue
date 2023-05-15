@@ -1,0 +1,66 @@
+from synch import Lock, acquire, release
+from alloc import malloc, free
+
+def Queue():
+    result = { .head: None, .tail: None, .lock: Lock() }
+    
+def get(q):
+    acquire(?q->lock)
+    let node = q->head:
+        if node == None:
+            result = None
+        else:
+            result = node->value
+            q->head = node->next
+            if q->head == None:
+                q->tail = None
+            free(node)
+    release(?q->lock)
+
+def put(q, v):
+    let node = malloc({ .value: v, .next: None }):
+        acquire(?q->lock)
+        if q->tail == None:
+            q->tail = q->head = node
+        else:
+            q->tail->next = node
+            q->tail = node
+        release(?q->lock)
+
+def insert(q, v):
+    let node = malloc({ .value: v, .next: None }):
+        acquire(?q->lock)
+        # if the queue is empty...
+        if q->tail == None:
+            q->tail = q->head = node
+        else:
+            node->next = q->head
+            q->head = node
+        release(?q->lock)
+
+def contains(q, v):
+    acquire(?q->lock)
+    var tmp = q->head
+    result = False
+    while tmp != None:
+        if tmp->value == v:
+            result = True
+        tmp = tmp->next
+    release(?q->lock)
+
+def reverse(q):
+    acquire(?q->lock)
+    prev_node = None
+    curr_node = q->head
+    next_node = None
+
+    # loop does nothing if queue is empty
+    while curr_node != None:
+        next_node = curr_node->next
+        curr_node->next = prev_node
+        prev_node = curr_node
+        curr_node = next_node
+
+    q->tail = q->head
+    q->head = prev_node
+    release(?q->lock)

@@ -1,0 +1,39 @@
+import queue
+
+const NOPS = 4
+const NGET = 2
+const NPUT = 1
+const NINSERT = 1
+const NCONTAINS = 1
+q = queue.Queue()
+
+def get_test(self):
+    # self is the # of thread spawned
+    print("call get", self)
+    let v = queue.get(?q):
+        print("done get", self, v)
+
+def put_test(self):
+    print("call put", self)
+    queue.put(?q, self)
+    print("done put", self)
+
+def insert_test(self):
+    print("call insert", self)
+    queue.insert(?q, self)
+    print("done insert", self)
+
+def contains_test(self):
+    print("call contains", self)
+    let v = queue.contains(?q, self):
+        print("done contains", self, v)
+
+for i in {1..NPUT}:
+    spawn put_test(i)
+for i in {1..NGET}:
+    spawn get_test(i)
+for i in {1..NINSERT}:
+    spawn insert_test(i)
+for i in {1..NCONTAINS}:
+    spawn contains_test(i)
+
